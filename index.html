@@ -51,6 +51,19 @@ button{cursor:pointer}
 .brand.small .da{font-size:1rem}
 .brand.small .brand-name{font-size:.82rem}
 
+/* Login record: adds a row (date, name, device) to the teacher's Google Sheet */
+function deviceLabel(){
+  const ua=navigator.userAgent;
+  const os=/iPhone/.test(ua)?"iPhone":/iPad/.test(ua)?"iPad":/Android/.test(ua)?"Android":/Mac OS X/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":/Linux/.test(ua)?"Linux":"Other";
+  const br=/Edg\//.test(ua)?"Edge":/OPR\//.test(ua)?"Opera":/Firefox\//.test(ua)?"Firefox":/CriOS|Chrome\//.test(ua)?"Chrome":/Safari\//.test(ua)?"Safari":"Browser";
+  return os+" · "+br;
+}
+function logLogin(name){
+  try{
+    fetch(LOGIN_LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name,device:deviceLabel()})}).catch(()=>{});
+  }catch(e){}
+}
+
 /* Login */
 .login{justify-content:center;gap:22px}
 .portrait{position:relative;margin:0}
@@ -242,6 +255,7 @@ blockquote p{margin:.5rem 0}
 <script>
 /* ================= CONTENT ================= */
 const PASSWORD = "demidov";
+const LOGIN_LOG_URL = "https://script.google.com/macros/s/AKfycbxP6y0ASzUSJmnECccNGcWg48rHhdvBVIqc_KdAsGtRUt3t3rqEaWqaVKVcwwUXSJ5quA/exec";
 
 const SENSATIONS = ["Heat","Cold","Caught in the rain","Walking in mud","Walking on ice","Windy","Foggy","In the snow","Tired","Wet hands","Soaked clothes","Greasy hands","Dirty hands","Paper cut","Face covered in soap","Headache","Toothache","Bad cough","Sore throat","Running nose","High fever","Pulled ankle","Particle in my eye","New dress/shirt","New, tight shoes","Hungry","Sleepy","Bug crawling on me","Thirsty","Pleasant breeze","Comfortable chair","Uncomfortable chair","Seat on cold bench","Seat on hot radiator","Out of breath","Bright light","Twilight","Wool to bare skin","Moist air; cold","Moist air; hot","Dry heat","Moist heat","Walk in swamp","Scratchy shirt","Wet hair","Shampooed hair","Stuffed ears","Popped ears","Smoky air","Just woke up"];
 
@@ -315,7 +329,7 @@ $("#loginForm").addEventListener("submit",e=>{
   const u=$("#user").value.trim(), p=$("#pass").value;
   if(!u){$("#loginErr").textContent="Enter your name to continue.";return}
   if(p!==PASSWORD){$("#loginErr").textContent="That password is not correct. Ask your teacher for the class password.";return}
-  $("#loginErr").textContent=""; store.set("da-user",u); $("#hello").textContent="Welcome, "+u; $("#pass").value=""; go("home");
+  $("#loginErr").textContent=""; store.set("da-user",u); logLogin(u); $("#hello").textContent="Welcome, "+u; $("#pass").value=""; go("home");
 });
 $("#logout").addEventListener("click",()=>{store.del("da-user"); go("login");});
 if(store.get("da-user")) $("#hello").textContent="Welcome, "+store.get("da-user");
