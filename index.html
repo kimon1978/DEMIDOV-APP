@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1b314d">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}[hidden]{display:none!important}img{max-width:100%}</style>
+</head>
+<body>
+<title>Demidov Association App</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600&family=Ubuntu:wght@300;400;500&display=swap">
+<style>
+/* Layout: one phone-width column, one screen per view. Palette taken from demidovassociation.com: DA! navy, black, white, greys, sand */
+:root{
+  --bg:#f7f7f7; --surface:#ffffff; --fg:#191919; --muted:#626262; --line:#e0e0e0;
+  --navy:#1b314d; --on-navy:#ffffff; --sand:#a8946c; --sand-soft:#efe9dd;
+  --mono:"Roboto Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --body:"Ubuntu", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d1520; --surface:#14202f; --fg:#eceff3; --muted:#9aa6b5; --line:#24344a;
+  --navy:#3f6593; --on-navy:#ffffff; --sand:#c9b58f; --sand-soft:#2a2a24; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0d1520; --surface:#14202f; --fg:#eceff3; --muted:#9aa6b5; --line:#24344a;
+  --navy:#3f6593; --on-navy:#ffffff; --sand:#c9b58f; --sand-soft:#2a2a24; color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55}
+.wrap{max-width:32rem;margin:0 auto;min-height:100%;box-sizing:border-box;display:flex;flex-direction:column;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 28px}
+h1,h2,h3{font-family:var(--mono);font-weight:500;margin:0;line-height:1.2;text-wrap:balance;letter-spacing:-.01em}
+h2{font-size:1.55rem}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sand);margin:0 0 4px}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--sand);outline-offset:2px}
+.btn{background:var(--navy);color:var(--on-navy);border:0;border-radius:2px;padding:.75rem 1.1rem;font-family:var(--mono);font-weight:500;font-size:.9rem;letter-spacing:.02em}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.back{background:none;border:0;padding:.3rem 0;color:var(--muted);font-family:var(--mono);font-size:.82rem;align-self:flex-start}
+.view{display:flex;flex-direction:column;gap:18px;flex:1}
+.note{font-size:.82rem;color:var(--muted)}
+.src{font-family:var(--mono);font-size:.68rem;color:var(--muted);letter-spacing:.02em}
+
+/* Brand mark */
+.brand{display:flex;align-items:center;gap:12px}
+.da{background:#1b314d;color:#fff;font-family:var(--body);font-weight:500;font-size:1.6rem;line-height:1;padding:.42em .34em .38em;letter-spacing:.01em}
+.brand-name{font-family:var(--mono);font-size:1.1rem;line-height:1.15}
+.brand.small .da{font-size:1rem}
+.brand.small .brand-name{font-size:.82rem}
+
+/* Login */
+.login{justify-content:center;gap:22px}
+.portrait{position:relative;margin:0}
+.portrait img{display:block;width:100%;max-width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 22%;filter:grayscale(1) contrast(1.02)}
+.portrait figcaption{font-family:var(--mono);font-size:.68rem;color:var(--muted);margin-top:6px}
+form{display:flex;flex-direction:column;gap:10px}
+label{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+input{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:.75rem .85rem;width:100%;box-sizing:border-box}
+.err{color:#b4442f;font-size:.88rem;min-height:1.3em;margin:0}
+
+/* Home */
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.home-hero{display:grid;grid-template-columns:92px 1fr;gap:14px;align-items:end}
+.home-hero img{width:92px;height:118px;object-fit:cover;object-position:50% 15%;filter:grayscale(1)}
+.home-hero p{margin:0;color:var(--muted);font-size:.9rem}
+.menu{display:flex;flex-direction:column;border-top:1px solid var(--fg)}
+.menu button{display:grid;grid-template-columns:2.4rem 1fr auto;align-items:baseline;gap:.5rem;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:1.15rem 0}
+.menu .n{font-family:var(--mono);color:var(--sand);font-size:.85rem}
+.menu .t{font-family:var(--mono);font-size:1.2rem;font-weight:500}
+.menu .s{grid-column:2;font-size:.86rem;color:var(--muted)}
+.menu .ar{grid-row:1;grid-column:3;color:var(--muted)}
+.menu button:hover .t{color:var(--navy)}
+
+/* Scales */
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line)}
+.tabs button{background:none;border:0;padding:.6rem .3rem;font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.25}
+.tabs button+button{border-left:1px solid var(--line)}
+.tabs button[aria-pressed="true"]{background:var(--navy);color:var(--on-navy)}
+.timer{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);padding:10px 12px}
+.clock{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:1.5rem;font-weight:500;min-width:4.4ch}
+.clock.done{color:var(--sand)}
+.steps{display:flex;align-items:center;border:1px solid var(--line)}
+.steps button{background:none;border:0;width:2.2rem;height:2.2rem;font-size:1.1rem}
+.steps span{min-width:4.6ch;text-align:center;font-family:var(--mono);font-size:.8rem}
+.timer .grow{flex:1}
+.timer .btn{padding:.55rem .8rem}
+.card{flex:1;min-height:14rem;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--navy);padding:22px;display:flex;flex-direction:column;justify-content:center;gap:12px;text-align:left;cursor:pointer}
+.card .ct{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--sand)}
+.card .txt{font-family:var(--mono);font-weight:500;font-size:1.65rem;line-height:1.25}
+.card .body{font-size:.95rem;color:var(--fg);margin:0;white-space:pre-line}
+.card .hint{font-family:var(--mono);font-size:.74rem;color:var(--muted)}
+details{border-top:1px solid var(--line);padding-top:10px}
+summary{font-family:var(--mono);font-size:.8rem;cursor:pointer;color:var(--navy);list-style-position:outside}
+details p,details li{font-size:.92rem}
+details ol,details ul{padding-left:1.2rem;margin:.5rem 0}
+blockquote{margin:.6rem 0;padding-left:12px;border-left:2px solid var(--sand);font-size:.92rem}
+blockquote p{margin:.5rem 0}
+
+/* Recordings */
+.rec{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+.rec h3{font-size:1.05rem}
+.rec .sub{font-size:.85rem;color:var(--muted);margin:2px 0 0}
+.player{display:flex;align-items:center;gap:12px}
+.play{width:44px;height:44px;border-radius:50%;border:0;background:var(--navy);color:var(--on-navy);display:grid;place-items:center;flex:none}
+.play:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.bar{flex:1;height:3px;background:var(--line);cursor:pointer}
+.bar i{display:block;height:100%;width:0;background:var(--sand)}
+.time{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.76rem;color:var(--muted);min-width:5ch;text-align:right}
+.pending{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+
+/* Auxiliary */
+.aux{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.aux li{border-top:1px solid var(--line);padding:13px 0;display:grid;grid-template-columns:2rem 1fr;gap:.3rem}
+.aux .n{font-family:var(--mono);color:var(--sand);font-size:.85rem;padding-top:2px}
+.aux b{font-weight:500}
+.aux .ref{display:block;font-family:var(--mono);font-size:.74rem;color:var(--muted);margin-top:2px}
+.aux p{margin:.35rem 0 0;font-size:.92rem}
+.aux details{border:0;padding:0;margin-top:6px}
+.group{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 0}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.fade{animation:fade .3s ease}
+@keyframes fade{from{opacity:.3;transform:translateY(3px)}to{opacity:1;transform:none}}
+</style>
+
+<div class="wrap" id="app">
+
+  <!-- 1. Logo + login -->
+  <section class="view login" id="v-login">
+    <div class="brand"><span class="da">DA!</span><span class="brand-name">Demidov<br>Association</span></div>
+    <figure class="portrait">
+      <img src="img/demidov-1.jpg" alt="Archival photograph of Nikolai Demidov">
+      <figcaption>Nikolai Demidov</figcaption>
+    </figure>
+    <form id="loginForm" novalidate>
+      <label for="user">Name or email</label>
+      <input id="user" autocomplete="username" placeholder="Your name">
+      <label for="pass">Password</label>
+      <input id="pass" type="password" autocomplete="current-password" placeholder="Class password">
+      <p class="err" id="loginErr" role="alert"></p>
+      <button class="btn" type="submit">Log in</button>
+    </form>
+  </section>
+
+  <!-- 2. Home -->
+  <section class="view" id="v-home" hidden>
+    <div class="top">
+      <div class="brand small"><span class="da">DA!</span><span class="brand-name">Demidov<br>Association</span></div>
+      <button class="back" id="logout">Log out</button>
+    </div>
+    <div class="home-hero">
+      <img src="img/demidov-2.jpg" alt="Archival photograph from the Demidov Association website">
+      <div>
+        <p class="eyebrow" id="hello">Welcome</p>
+        <h2>Daily practice</h2>
+        <p>Even fifteen minutes a day, as long as you don't skip days.</p>
+      </div>
+    </div>
+    <nav class="menu">
+      <button data-go="scales"><span class="n">01</span><span class="t">Scales</span><span class="ar">→</span><span class="s">Sensations, places and events, yielding to urges</span></button>
+      <button data-go="recordings"><span class="n">02</span><span class="t">Facilitation Recordings</span><span class="ar">→</span><span class="s">Four guided recordings</span></button>
+      <button data-go="auxiliary"><span class="n">03</span><span class="t">Auxiliary Exercises</span><span class="ar">→</span><span class="s">Heightened technique and further homework</span></button>
+    </nav>
+    <details>
+      <summary>General notes on exercises</summary>
+      <ul>
+        <li>Through meditation, find yourself in a state of calm prior to starting your exercises. That includes achieving singularity of seating and "losing your body," concentrating specifically on an arm, or leg. Keep your spinal cord, sight and breath alive throughout that preparation. (Feel free to use the recording of the guided facilitation session held in class.)</li>
+        <li>Keep exercises mundane, and don't worry about any "plot" (what is going on?), or "character" (who am I?). Use Demidov's advice in the article titled Silk Thread (BA-C, Glossary, p. 786).</li>
+        <li>Don't allow yourself to become exhausted. Take frequent breaks. Even fifteen minutes a day may be enough (plus another fifteen minutes or so to generate calm prior to exercising), as long as you exercise daily. Take notes of what you've done on a given day.</li>
+        <li>If you notice "watching" yourself to the point that it interferes with your work, assign an object in the space to take the function of the watcher (chair, table, etc.).</li>
+        <li>Only do what you feel like doing, and what you are capable of doing.</li>
+      </ul>
+      <p class="src">Source: Demidov Acting Certificate Course, Winter Homework</p>
+    </details>
+  </section>
+
+  <!-- 3. Scales -->
+  <section class="view" id="v-scales" hidden>
+    <button class="back" data-go="home">← Home</button>
+    <div><p class="eyebrow">01</p><h2>Scales</h2></div>
+    <div class="tabs" role="group" aria-label="Scale list">
+      <button data-list="sens" aria-pressed="true">Physical<br>sensations</button>
+      <button data-list="place" aria-pressed="false">Places /<br>events</button>
+      <button data-list="urges" aria-pressed="false">Yielding<br>to urges</button>
+    </div>
+    <div class="timer">
+      <span class="clock" id="clock">05:00</span>
+      <div class="steps" aria-label="Minutes">
+        <button id="minus" aria-label="One minute less">−</button>
+        <span id="mins">5 min</span>
+        <button id="plus" aria-label="One minute more">+</button>
+      </div>
+      <span class="grow"></span>
+      <button class="btn" id="startBtn">Start</button>
+      <button class="btn ghost" id="resetBtn" aria-label="Reset timer" title="Reset">↺</button>
+    </div>
+    <div class="card" id="scaleCard" role="button" tabindex="0" aria-live="polite">
+      <span class="ct" id="scaleCount">Ready</span>
+      <span class="txt" id="scaleText">Tap to draw a theme</span>
+      <p class="body" id="scaleBody" hidden></p>
+      <span class="hint" id="scaleHint">Themes come up in random order, like putting your finger anywhere on the list</span>
+    </div>
+    <details id="howTo">
+      <summary>How to work with the themes</summary>
+      <blockquote>
+        <p>"Read the theme you just "picked". Lets' say, you picked "mosquito bites" – immediately, without any thinking, yield to spontaneous sensations, movements, thought – to everything that comes to you as a reaction to the words you read."</p>
+        <p>"Don't rush to move to the next theme, until you've exhausted the previous theme. Rest for a few minutes, then take another theme. No need to exercise many themes in one session, so that not to get accustomed to approximating the truth."</p>
+      </blockquote>
+      <p><b>Three precepts</b></p>
+      <ol>
+        <li>Assign "who is watching"</li>
+        <li>"Life as normal"; no extraordinary events</li>
+        <li>"Public solitude": I am alone in the space</li>
+      </ol>
+      <p class="src">Direct quotes from Demidov Scales and the Scale Exercises Examples sheet</p>
+    </details>
+  </section>
+
+  <!-- 4. Recordings -->
+  <section class="view" id="v-recordings" hidden>
+    <button class="back" data-go="home">← Home</button>
+    <div><p class="eyebrow">02</p><h2>Facilitation Recordings</h2></div>
+    <div id="recList" style="display:flex;flex-direction:column;gap:16px"></div>
+  </section>
+
+  <!-- 5. Auxiliary -->
+  <section class="view" id="v-auxiliary" hidden>
+    <button class="back" data-go="home">← Home</button>
+    <div><p class="eyebrow">03</p><h2>Auxiliary Exercises</h2></div>
+    <p class="note" style="margin:0">BA-C: <i>Nikolai Demidov: Becoming an Actor-Creator</i> (Routledge)</p>
+    <p class="group">Heightened technique</p>
+    <ol class="aux" id="auxList"></ol>
+    <p class="group">Further homework</p>
+    <ol class="aux" id="auxList2"></ol>
+    <p class="src">Source: Demidov Acting Certificate Course, Winter Homework</p>
+  </section>
+</div>
+
+<script>
+/* ================= CONTENT ================= */
+const PASSWORD = "demidov";
+
+const SENSATIONS = ["Heat","Cold","Caught in the rain","Walking in mud","Walking on ice","Windy","Foggy","In the snow","Tired","Wet hands","Soaked clothes","Greasy hands","Dirty hands","Paper cut","Face covered in soap","Headache","Toothache","Bad cough","Sore throat","Running nose","High fever","Pulled ankle","Particle in my eye","New dress/shirt","New, tight shoes","Hungry","Sleepy","Bug crawling on me","Thirsty","Pleasant breeze","Comfortable chair","Uncomfortable chair","Seat on cold bench","Seat on hot radiator","Out of breath","Bright light","Twilight","Wool to bare skin","Moist air; cold","Moist air; hot","Dry heat","Moist heat","Walk in swamp","Scratchy shirt","Wet hair","Shampooed hair","Stuffed ears","Popped ears","Smoky air","Just woke up"];
+
+const PLACES = ["Doctor's office","Train carriage","Garden, spring","Garden, autumn","Bus stop; night","Hospital room","Train station","Airport","Ocean; winter","Ocean; summer","On deck of a boat","My fiancé's room","Room needs repairs","Hotel room","Playground","Museum gallery","Childhood bedroom","Park where you broke up with him/her","Dark basement; mice","Dark basement; tasty goodies","College dorm room","Your old classroom","Classroom; before finals","By his/her door; first date","By the principal's office door","Forest","Skyscraper roof","Sculpture garden","Water dripping on you from the ceiling","It's your birthday","Expecting a call","Phone call: good news","Phone call: good news","Found a wallet","Sitting on anthill","Restaurant; got the bill; wallet missing","Book: page missing","Good review","Bad review","Apology note","Acceptance letter: accepted","Acceptance letter: rejected","Fight; he/she left","After first date; went well","After first date; went badly","Someone knocked on my window/door","Expecting someone's arrival","Tonight's the party; roommate borrowed your jacket","Phone bill is too high","Pay check is too high"];
+
+const URGES = [
+  {t:"Starting with a random urge", b:"Either sit down, remain standing, or lay down and allow every miniscule, almost imperceptible urge and small automatic movement develop freely. Don't select impulses: on the contrary, yield to the first impulse or urge that comes; let them come on their own, without any forcing on your part. Just let them."},
+  {t:"Starting with a select urge, rotating them", b:"Prior to this exercise, you assign which of the impulses (feeling/mood, thought, sensation or movement – small automatic or regular) you will be yielding to at the start. As you green-light the assigned impulse, it will then awaken the others. As you continue exercising, rotate your \"opening\" urges."},
+  {t:"Exercise in free flow", b:"Let any next impression or urge displace the previous one, as the exercise develops, freely flowing from one urge to the next."},
+  {t:"Complete surrender to the first urge", b:"Give in to the first urge and stay with it; resist fully yielding to anything new you encounter on your way. Instead, perceive the new, and react to the new – as if through the prism of your original impression."},
+  {t:"\"I am in front of the audience\"", b:"Just go about your regular life, but – prior to doing so – say to yourself: \"I am before an audience\" (a version of \"public solitude\")."}
+];
+
+// Add the audio file (src) for each when ready.
+const RECORDINGS = [
+  {title:"Character Facilitation", sub:"Accumulations", ref:"Work on Character: use class recordings to exercise", src:""},
+  {title:"The Lucky Fool", sub:"Lump of Faith", ref:"BA-C pp. 545-6, 622, 683 · Glossary pp. 776-77", src:""},
+  {title:"The Great Sleep of the Body", sub:"", ref:"BA-C pp. 687, 695-97, 744-48", src:""},
+  {title:"Corridor of the Past", sub:"", ref:"", src:""}
+];
+
+const AUX = [
+  {name:"Giving in to Sensations", ref:"BA-C pp. 682-4; Glossary pp. 769-70", extra:true},
+  {name:"Psychological (Psychic) Breathing", ref:"BA-C pp. 16, 539, 707, 711-12, 717-18, 718n3", desc:"Breathing on a candle."},
+  {name:"Great Sleep of the Body", ref:"BA-C pp. 687, 695-97, 744-48"},
+  {name:"Admitting", ref:"BA-C, Glossary, pp. 755-56"},
+  {name:"Admitting \"Letting Go\" and \"Full Stop\" / ball exercise", ref:"BA-C p. 535"},
+  {name:"The Nearest Flow of Thought", ref:"BA-C, Glossary, pp. 780-81"},
+  {name:"Lucky Fool", ref:"BA-C pp. 545-6, 622, 683"},
+  {name:"Lump of Faith", ref:"BA-C, Glossary, pp. 776-77"},
+  {name:"Eyes (of Asana)", ref:"BA-C, Glossary, pp. 765-66; also Glossary, Passivity, Culture of Passivity, p. 781"}
+];
+const AUX2 = [
+  {name:"Touch Exercise", ref:"Partner exercise", desc:"Partners take turns as \"active\" and \"passive.\" The passive partner sits and does their best not to anticipate anything. The active partner waits behind them until they let go of any restlessness, then touches them. Version 1: react to the touch as a physical sensation. Version 2: the touch has an assignment (a friend, an enemy, a doctor, a grandparent, a stranger, a friend I have not seen in ages). Agree on zones of comfort before exercising."},
+  {name:"Solo Etudes around an actual object in your room", ref:"Example: BA-C pp. 287-90", desc:"Choose an actual object in your private space and incorporate it into a solo etude. Write a few lines and stage directions connected with this object. Keep them simple and realistic."},
+  {name:"Make your own theme lists", ref:"Sensations, Times, Places and Events", desc:"Make several lists of 50 or more themes each: physical sensations, and more complex circumstances such as events and places. Do not choose any \"extraordinary\", psychologically heightened themes."}
+];
+const ASANA = `<details><summary>Demidov on singularity, or asana (unpublished article)</summary><blockquote>
+<p>"How to "perform an asana" over my "I am" and strengthen the feeling of my own "I am.""</p>
+<p>"At this very moment, I don't feel like doing anything – I'm just tired; I want to sit still like an owl. I don't want to rehearse, or act, or work."</p>
+<p>"If I dig deeper, it will become clear that I do want something else, after all – maybe I am a little hungry, or thirsty, or perhaps I'm cold; or it would be nice if such and such was with me. But among all these desires there is one, which can be called predominant or prevailing."</p>
+<p>"All the rest are in question: I could eat, or I could not eat, etc. As for me being tired and not wanting to exert energy - that is beyond question; there is no escaping that. All other desires seem to even help the main one. This unquestionable, predominant state is what I now need to build everything on."</p>
+<p>"What does it mean "to build on it?" It means to reject all the given circumstances that contradict it, all these rhythms, tempos, characterizations, youthfulness, freshness, comedic energy, concentration and everything else. Only I exist, in my predominant state, fully immersed in it alone – and the score of the text (words or stage directions - it doesn't matter)."</p>
+<p>"The prevailing state is my biggest truth, and when I highlight it, when I give up and give in to it, then it transforms into my one and only great truth."</p>
+<p>"No matter how contradictory and unsuitable your current state may be in relation to what you need, according to the play, proceed from it boldly."</p>
+</blockquote><p class="src">Demidov Archive. Fund 59. Folder 13. Excerpts, as given in the Winter Homework.</p></details>`;
+/* =========================================== */
+
+const $ = s => document.querySelector(s);
+const esc = s => s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const store = {
+  get(k){try{return sessionStorage.getItem(k)}catch(e){return null}},
+  set(k,v){try{sessionStorage.setItem(k,v)}catch(e){}},
+  del(k){try{sessionStorage.removeItem(k)}catch(e){}}
+};
+const views = ["login","home","scales","recordings","auxiliary"];
+function show(name){
+  if(!views.includes(name)) name="home";
+  if(name!=="login" && !store.get("da-user")) name="login";
+  views.forEach(v=>{ const el=$("#v-"+v); el.hidden = v!==name; if(v===name){el.classList.remove("fade"); void el.offsetWidth; el.classList.add("fade");} });
+  if(name!=="recordings") stopAudio();
+  window.scrollTo(0,0);
+}
+function go(name){ if(location.hash!=="#"+name) location.hash=name; else show(name); }
+window.addEventListener("hashchange",()=>show(location.hash.slice(1)||"home"));
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]"); if(b) go(b.dataset.go);});
+
+/* Login */
+$("#loginForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const u=$("#user").value.trim(), p=$("#pass").value;
+  if(!u){$("#loginErr").textContent="Enter your name to continue.";return}
+  if(p!==PASSWORD){$("#loginErr").textContent="That password is not correct. Ask your teacher for the class password.";return}
+  $("#loginErr").textContent=""; store.set("da-user",u); $("#hello").textContent="Welcome, "+u; $("#pass").value=""; go("home");
+});
+$("#logout").addEventListener("click",()=>{store.del("da-user"); go("login");});
+if(store.get("da-user")) $("#hello").textContent="Welcome, "+store.get("da-user");
+
+/* Chime */
+let ctx;
+function audioCtx(){ if(!ctx){ try{ctx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){} } if(ctx&&ctx.state==="suspended") ctx.resume(); return ctx; }
+function chime(){
+  const c=audioCtx(); if(!c) return;
+  [0,1.4,2.8].forEach(delay=>{
+    [[528,0.28],[1056,0.1],[1584,0.05]].forEach(([f,g])=>{
+      const o=c.createOscillator(), a=c.createGain(), t=c.currentTime+delay;
+      o.type="sine"; o.frequency.value=f;
+      a.gain.setValueAtTime(0.0001,t); a.gain.exponentialRampToValueAtTime(g,t+0.02); a.gain.exponentialRampToValueAtTime(0.0001,t+3.2);
+      o.connect(a).connect(c.destination); o.start(t); o.stop(t+3.3);
+    });
+  });
+}
+
+/* Timer */
+let mins=5, left=300, tick=null, lock=null;
+const fmt=s=>String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+function paint(){ $("#clock").textContent=fmt(left); $("#mins").textContent=mins+" min"; }
+async function keepAwake(on){ try{ if(on && navigator.wakeLock) lock=await navigator.wakeLock.request("screen"); else if(lock){await lock.release(); lock=null;} }catch(e){} }
+function stopTimer(){ clearInterval(tick); tick=null; $("#startBtn").textContent="Start"; keepAwake(false); }
+$("#startBtn").addEventListener("click",()=>{
+  audioCtx();
+  if(tick){ stopTimer(); $("#startBtn").textContent="Resume"; return; }
+  if(left<=0) left=mins*60;
+  $("#clock").classList.remove("done");
+  const end=Date.now()+left*1000;
+  tick=setInterval(()=>{
+    left=Math.max(0,Math.round((end-Date.now())/1000)); paint();
+    if(left===0){ stopTimer(); $("#clock").classList.add("done"); $("#clock").textContent="Time"; chime(); }
+  },250);
+  $("#startBtn").textContent="Pause"; keepAwake(true);
+});
+$("#resetBtn").addEventListener("click",()=>{ stopTimer(); left=mins*60; $("#clock").classList.remove("done"); paint(); });
+$("#minus").addEventListener("click",()=>{ if(mins>1){mins--; if(!tick) left=mins*60; paint();} });
+$("#plus").addEventListener("click",()=>{ if(mins<90){mins++; if(!tick) left=mins*60; paint();} });
+paint();
+
+/* Scales */
+const LISTS = {
+  sens:{name:"Physical sensations", items:SENSATIONS, random:true},
+  place:{name:"Places / events", items:PLACES, random:true},
+  urges:{name:"Yielding to urges", items:URGES, random:false}
+};
+let cur="sens", order=[], pos=-1;
+function buildOrder(){
+  const n=LISTS[cur].items.length; order=[...Array(n).keys()];
+  if(LISTS[cur].random) for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}
+  pos=-1;
+}
+function resetCard(){
+  const L=LISTS[cur];
+  $("#scaleCount").textContent=L.name+" · "+L.items.length+(L.random?" themes":" exercises");
+  $("#scaleText").textContent=L.random?"Tap to draw a theme":"Tap to begin";
+  $("#scaleBody").hidden=true;
+  $("#scaleHint").textContent=L.random?"Themes come up in random order, like putting your finger anywhere on the list":"The five variations, one at a time";
+  $("#howTo").hidden=!L.random;
+}
+function nextScale(){
+  pos++; if(pos>=order.length){ buildOrder(); pos=0; }
+  const L=LISTS[cur], i=order[pos], it=L.items[i];
+  const card=$("#scaleCard"); card.classList.remove("fade"); void card.offsetWidth; card.classList.add("fade");
+  if(L.random){
+    $("#scaleCount").textContent=L.name+" · No. "+(i+1);
+    $("#scaleText").textContent=it; $("#scaleBody").hidden=true;
+    $("#scaleHint").textContent=pos===order.length-1?"That was the whole list. Tap to start over":"Exhaust this theme, rest, then tap for the next";
+  }else{
+    $("#scaleCount").textContent=(i+1)+" of "+L.items.length;
+    $("#scaleText").textContent=it.t; $("#scaleBody").textContent=it.b; $("#scaleBody").hidden=false;
+    $("#scaleHint").textContent=pos===order.length-1?"Last one. Tap to start again":"Tap for the next variation";
+  }
+}
+document.querySelectorAll("[data-list]").forEach(b=>b.addEventListener("click",()=>{
+  cur=b.dataset.list;
+  document.querySelectorAll("[data-list]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+  buildOrder(); resetCard();
+}));
+$("#scaleCard").addEventListener("click",nextScale);
+$("#scaleCard").addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault(); nextScale();} });
+buildOrder(); resetCard();
+
+/* Recordings */
+const audio=new Audio(); let current=null;
+const PLAY='<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M4 2.5v11l9-5.5z"/></svg>';
+const PAUSE='<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><rect x="3.5" y="2.5" width="3" height="11"/><rect x="9.5" y="2.5" width="3" height="11"/></svg>';
+function stopAudio(){ audio.pause(); if(current) current.btn.innerHTML=PLAY; }
+$("#recList").innerHTML=RECORDINGS.map((r,i)=>`
+  <div class="rec" data-i="${i}">
+    <div><h3>${esc(r.title)}</h3>${r.sub?`<p class="sub">${esc(r.sub)}</p>`:""}${r.ref?`<span class="src">${esc(r.ref)}</span>`:""}</div>
+    <div class="player">
+      <button class="play" aria-label="Play ${esc(r.title)}" ${r.src?"":"disabled"}>${PLAY}</button>
+      <div class="bar"><i></i></div>
+      <span class="time">${r.src?"0:00":"--:--"}</span>
+    </div>
+    ${r.src?"":`<span class="pending">Recording not added yet</span>`}
+  </div>`).join("");
+const mmss=s=>isFinite(s)?Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0"):"0:00";
+document.querySelectorAll(".rec").forEach(el=>{
+  const i=+el.dataset.i, btn=el.querySelector(".play"), bar=el.querySelector(".bar"), fill=bar.querySelector("i"), time=el.querySelector(".time");
+  btn.addEventListener("click",()=>{
+    if(current&&current.i===i&&!audio.paused){ audio.pause(); btn.innerHTML=PLAY; return; }
+    if(!current||current.i!==i){ stopAudio(); if(current) current.fill.style.width="0"; audio.src=RECORDINGS[i].src; current={i,btn,fill,time}; }
+    audio.play().then(()=>btn.innerHTML=PAUSE).catch(()=>{ time.textContent="Can't play"; });
+  });
+  bar.addEventListener("click",e=>{ if(current&&current.i===i&&audio.duration){ const r=bar.getBoundingClientRect(); audio.currentTime=(e.clientX-r.left)/r.width*audio.duration; } });
+});
+audio.addEventListener("timeupdate",()=>{ if(!current) return; current.fill.style.width=(audio.currentTime/(audio.duration||1)*100)+"%"; current.time.textContent=mmss(audio.currentTime); });
+audio.addEventListener("ended",()=>{ if(current) current.btn.innerHTML=PLAY; });
+
+/* Auxiliary */
+const auxItem=(a,i)=>`<li><span class="n">${String(i+1).padStart(2,"0")}</span><div><b>${esc(a.name)}</b><span class="ref">${esc(a.ref)}</span>${a.desc?`<p>${esc(a.desc)}</p>`:""}${a.extra?ASANA:""}</div></li>`;
+$("#auxList").innerHTML=AUX.map(auxItem).join("");
+$("#auxList2").innerHTML=AUX2.map(auxItem).join("");
+
+show(location.hash.slice(1)||"home");
+</script>
+
+</body>
+</html>
