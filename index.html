@@ -51,19 +51,6 @@ button{cursor:pointer}
 .brand.small .da{font-size:1rem}
 .brand.small .brand-name{font-size:.82rem}
 
-/* Login record: adds a row (date, name, device) to the teacher's Google Sheet */
-function deviceLabel(){
-  const ua=navigator.userAgent;
-  const os=/iPhone/.test(ua)?"iPhone":/iPad/.test(ua)?"iPad":/Android/.test(ua)?"Android":/Mac OS X/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":/Linux/.test(ua)?"Linux":"Other";
-  const br=/Edg\//.test(ua)?"Edge":/OPR\//.test(ua)?"Opera":/Firefox\//.test(ua)?"Firefox":/CriOS|Chrome\//.test(ua)?"Chrome":/Safari\//.test(ua)?"Safari":"Browser";
-  return os+" · "+br;
-}
-function logLogin(name){
-  try{
-    fetch(LOGIN_LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name,device:deviceLabel()})}).catch(()=>{});
-  }catch(e){}
-}
-
 /* Login */
 .login{justify-content:center;gap:22px}
 .portrait{position:relative;margin:0}
@@ -322,6 +309,19 @@ function show(name){
 function go(name){ if(location.hash!=="#"+name) location.hash=name; else show(name); }
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)||"home"));
 document.addEventListener("click",e=>{const b=e.target.closest("[data-go]"); if(b) go(b.dataset.go);});
+
+/* Login record: adds a row (date, name, device) to the teacher's Google Sheet */
+function deviceLabel(){
+  const ua=navigator.userAgent;
+  const os=/iPhone/.test(ua)?"iPhone":/iPad/.test(ua)?"iPad":/Android/.test(ua)?"Android":/Mac OS X/.test(ua)?"Mac":/Windows/.test(ua)?"Windows":/Linux/.test(ua)?"Linux":"Other";
+  const br=/Edg\//.test(ua)?"Edge":/OPR\//.test(ua)?"Opera":/Firefox\//.test(ua)?"Firefox":/CriOS|Chrome\//.test(ua)?"Chrome":/Safari\//.test(ua)?"Safari":"Browser";
+  return os+" · "+br;
+}
+function logLogin(name){
+  try{
+    fetch(LOGIN_LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({name,device:deviceLabel()})}).catch(()=>{});
+  }catch(e){}
+}
 
 /* Login */
 $("#loginForm").addEventListener("submit",e=>{
